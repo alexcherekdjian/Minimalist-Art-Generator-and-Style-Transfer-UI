@@ -142,6 +142,19 @@ class Window(QWidget):
 			)
 		self.return_button.show()
 
+		if not art_gen:
+			self.go_deeper_button = QPushButton('Go Deeper', self)
+			self.go_deeper_button.move(430,545)
+			self.go_deeper_button.setFixedWidth(140)
+			self.go_deeper_button.setFixedHeight(30)
+			self.go_deeper_button.clicked.connect(self.goDeeperClicked)
+			self.go_deeper_button.setStyleSheet(\
+				"QPushButton {font: 15pt Tahoma; color: grey; background-color: ghostwhite; border-color: ghostwhite; border-radius: 12px; border-style: outset; border-width: 4px;}"\
+				"QPushButton:hover { background-color: white; border-color: white; }" \
+				"QPushButton:pressed { background-color: silver; border-color: transparent;}" \
+				)
+			self.go_deeper_button.show()
+
 
 	def openFileDialog(self):
 		pathname = ""
@@ -303,64 +316,32 @@ class Window(QWidget):
 			self.return_button.hide()
 			QApplication.processEvents()
 			self.done.hide()
-			self.width_text.show()
-			self.height_text.show()
-			self.picture_number_text.show()
-			self.color_drop_region.show()
-			self.generate_button.show()
-			self.width_label.show()
-			self.height_label.show()
-			self.picture_number_label.show()
-			self.palette_label.show()
-			self.color_button.show()
-			self.cb_template.show()
-			self.palette_button.show()
-			self.style_button.show()
-			self.drop_palette_label.show()
-			self.arrow_up_palette.show()
+
+			for widget in self.art_gen_widgets:
+				widget.show()
 
 		else:
 			self.picture_preview.hide()
+			self.go_deeper_button.hide()
 			self.description.hide()
 			self.return_button.hide()
 			QApplication.processEvents()
 			self.done.hide()
-			self.color_button.show()
-			self.palette_button.show()
-			self.color_drop_region_style.show()
-			self.picture_drop_region_style.show()
-			self.picture_button.show()
-			self.art_gen_button.show()
-			self.generate_button.show()
-			self.drop_pic_label.show()
-			self.palette_label_optional.show()
-			self.pic_label_max.show()
-			self.drop_palette_label.show()
-			self.arrow_up_palette.show()
-			self.arrow_up_picture.show()
+
+			for widget in self.style_gen_widgets:
+				widget.show()
 
 
 	def artGenPage(self):
 		# shows all the art gen widgets
 		global art_gen
-		self.width_text.show()
-		self.height_text.show()
-		self.picture_number_text.show()
-		self.color_drop_region.show()
-		self.generate_button.show()
-		self.width_label.show()
-		self.height_label.show()
-		self.picture_number_label.show()
-		self.palette_label.show()
-		self.color_button.show()
-		self.cb_template.show()
-		self.palette_button.show()
-		self.style_button.show()
-		self.drop_palette_label.show()
-		self.arrow_up_picture.hide()
-		self.drop_pic_label.hide()
-		self.palette_label_optional.hide()
-		self.pic_label_max.hide()
+
+		for widget in self.style_gen_widgets:
+			widget.hide()
+
+		for widget in self.art_gen_widgets:
+			widget.show()
+
 		self.drop_palette_label.move(575,170)
 		self.arrow_up_palette.move(635,203)
 
@@ -375,56 +356,74 @@ class Window(QWidget):
 		self.color_button.move(130,330)
 		self.palette_button.move(130,380)
 
-		self.art_gen_button.hide()
-		self.color_drop_region_style.hide()
-		self.picture_drop_region_style.hide()
-		self.picture_button.hide()
-
 		art_gen = True
 
 
 	def StyleTransferPage(self):
 		# shows all the style transfer widgets
 		global art_gen
-		self.width_text.hide()
-		self.height_text.hide()
-		self.picture_number_text.hide()
-		
-		self.width_label.hide()
-		self.height_label.hide()
-		self.picture_number_label.hide()
-		self.palette_label.hide()
-		self.cb_template.hide()
-		self.style_button.hide()
-		self.color_drop_region.hide()
 
-		self.drop_pic_label.show()
-		self.palette_label_optional.show()
-		self.pic_label_max.show()
+		for widget in self.art_gen_widgets:
+			widget.hide()
+
+		for widget in self.style_gen_widgets:
+			widget.show()
+
 		self.drop_palette_label.move(100, 180)
-
 		self.arrow_up_palette.move(160, 210)
-		self.arrow_up_picture.show()
-
 		self.color_button.move(430, 250)
 		self.palette_button.move(430, 300)
-		
-		self.color_drop_region_style.show()
-		self.picture_drop_region_style.show()
-		self.picture_button.show()
 
-		self.art_gen_button = QPushButton('Use Art Generator', self)
-		self.art_gen_button.move(-5,-5)
-		self.art_gen_button.setFixedWidth(120)
-		self.art_gen_button.setFixedHeight(35)
-		self.art_gen_button.clicked.connect(self.artGenPage)
-		self.art_gen_button.setStyleSheet(\
-			"QPushButton {font: 12pt Tahoma; color: grey; background-color: ghostwhite; border-color: ghostwhite; border-radius: 5px; border-style: outset; border-width: 4px;}"\
-			"QPushButton:hover { background-color: white; border-color: white; }" \
-			"QPushButton:pressed { background-color: silver; border-color: transparent;}" \
-			)
-		self.art_gen_button.show()
 		art_gen = False
+
+	def goDeeperClicked(self):
+			self.picture_preview.hide()
+			self.go_deeper_button.hide()
+			self.description.hide()
+			self.return_button.hide()
+			QApplication.processEvents()
+			self.done.hide()
+
+			# create metadata 
+			filepath = "/Users/alexcherekdjian/Desktop/Fall 2019/coen296B/Minimal Art UI/Generated Art/stylepic.png"
+			image = PIL.Image.open(filepath)
+
+			if image.width > image.height:
+				scale_factor = (image.width/1000)
+			else:
+				scale_factor = (image.height/1000)
+
+			height_resize = image.height/scale_factor
+			width_resize = image.width/scale_factor
+			new_size = (int(width_resize), int(height_resize))
+			image.thumbnail(new_size)
+			image.save(filepath) 
+
+			image = PIL.Image.open(filepath)
+			image = image.filter(PIL.ImageFilter.FIND_EDGES)
+			image.save('Graphics/composite.png') 
+
+			# find average color
+			img = io.imread('Graphics/composite.png')[:, :, :-1]
+			average = img.mean(axis=0).mean(axis=0)
+
+			pixel_list = []
+			image2 = PIL.Image.open('Graphics/composite.png')
+
+			# use average color as threshold to pick points from picture
+			for y in range(0, image2.height):
+				for x in range(0, image2.width):
+					xy = (x,y)
+					pc_color = image2.getpixel(xy)
+
+					if pc_color > (average[0], average[1], 0):
+						x_scaled = x*10
+						y_scaled = y*10
+						xy_scaled = (x_scaled, y_scaled)
+						pixel_list.append(xy_scaled)
+
+			# create an image
+			self.createStyleTransfer(pixel_list, image2.width*10, image2.height*10, filepath)
 
 	def mainUI(self):
 		# set background to picture gradient
@@ -660,6 +659,29 @@ class Window(QWidget):
 			)
 		self.picture_button.hide()
 
+		self.art_gen_button = QPushButton('Use Art Generator', self)
+		self.art_gen_button.move(-5,-5)
+		self.art_gen_button.setFixedWidth(120)
+		self.art_gen_button.setFixedHeight(35)
+		self.art_gen_button.clicked.connect(self.artGenPage)
+		self.art_gen_button.setStyleSheet(\
+			"QPushButton {font: 12pt Tahoma; color: grey; background-color: ghostwhite; border-color: ghostwhite; border-radius: 5px; border-style: outset; border-width: 4px;}"\
+			"QPushButton:hover { background-color: white; border-color: white; }" \
+			"QPushButton:pressed { background-color: silver; border-color: transparent;}" \
+			)
+		self.art_gen_button.hide()
+
+		self.art_gen_widgets = [self.width_text, self.height_text, self.picture_number_text, \
+			self.color_drop_region, self.generate_button, self.width_label, self.height_label, \
+			self.picture_number_label, self.palette_label, self.color_button, self.cb_template, \
+			self.palette_button, self.style_button, self.drop_palette_label, self.arrow_up_palette]
+
+		self.style_gen_widgets = [self.color_button, self.palette_button, self.color_drop_region_style, \
+			self.picture_drop_region_style, self.picture_button, self.art_gen_button, self.generate_button, \
+			self.drop_pic_label, self.palette_label_optional, self.pic_label_max, self.drop_palette_label,\
+			self.arrow_up_palette, self.arrow_up_picture]
+			
+
 	def createImages(self):
 		global colors_gen
 		global number_of_pictures
@@ -705,19 +727,8 @@ class Window(QWidget):
 		global colors_style
 
 		# clean up window
-		self.art_gen_button.hide()
-		self.color_drop_region_style.hide()
-		self.picture_drop_region_style.hide()
-		self.picture_button.hide()
-		self.color_button.hide()
-		self.palette_button.hide()
-		self.generate_button.hide()
-		self.drop_pic_label.hide()
-		self.palette_label_optional.hide()
-		self.pic_label_max.hide()
-		self.drop_palette_label.hide()
-		self.arrow_up_palette.hide()
-		self.arrow_up_picture.hide()
+		for widget in self.style_gen_widgets:
+			widget.hide()
 
 		# write temp labels
 		info_label_1 = QLabel(self)
@@ -748,7 +759,6 @@ class Window(QWidget):
 		global number_of_pictures
 		global art_gen
 
-
 		if art_gen:
 			# ensure all inputs are an integer
 			try:
@@ -762,22 +772,11 @@ class Window(QWidget):
 
 			# if all inputs are numbers, ensure all are above 0
 			if (width > 0) and (height > 0) and (number_of_pictures > 0):
+
 					# clean up current window and create images
-					self.width_text.hide()
-					self.height_text.hide()
-					self.picture_number_text.hide()
-					self.color_drop_region.hide()
-					self.generate_button.hide()
-					self.width_label.hide()
-					self.height_label.hide()
-					self.picture_number_label.hide()
-					self.palette_label.hide()
-					self.color_button.hide()
-					self.cb_template.hide()
-					self.palette_button.hide()
-					self.style_button.hide()
-					self.drop_palette_label.hide()
-					self.arrow_up_palette.hide()
+					for widget in self.art_gen_widgets:
+						widget.hide()
+
 					self.createImages()
 			else: 
 				QMessageBox.information(self, "Error", error.error_list["parameters"], QMessageBox.Ok)

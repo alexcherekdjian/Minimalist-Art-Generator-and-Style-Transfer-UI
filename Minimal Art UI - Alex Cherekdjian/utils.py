@@ -192,10 +192,10 @@ def createStyleTransferImage(window, pixel_list, colors, width_input, height_inp
 			# copy the shape and deform it extremely
 			tempshape = copy.deepcopy(baseshape)
 			layer = deform(tempshape, 3, random.randint(25,65)) #75 # for more hectic designs use 100- 300
-
+			
 			for i in range(len(layer)):
 				cr.line_to(layer[i][0], layer[i][1])
-			
+
 			cr.fill()
 
 		# update our current x and y values to follow pattern
